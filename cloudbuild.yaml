@@ -1,5 +1,5 @@
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/tr-374806/streamlit-fa', '.']
+  args: ['build', '-t', 'gcr.io/tr-374806/streamlit-econ', '.']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/tr-374806/streamlit-fa']
+  args: ['push', 'gcr.io/tr-374806/streamlit-econ']
