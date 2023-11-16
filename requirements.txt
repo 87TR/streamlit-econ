@@ -1,0 +1,17 @@
+snowflake-connector-python
+snowflake-snowpark-python
+streamlit
+streamlit-elements
+streamlit-authenticator
+streamlit_option_menu
+streamlit-extras
+pyyaml
+pypages
+bcrypt
+psycopg2-binary
+sqlalchemy
+datetime
+pandas
+numpy
+scipy
+altair

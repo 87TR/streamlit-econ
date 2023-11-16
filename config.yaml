@@ -1,0 +1,17 @@
+cookie:
+  expiry_days: 30
+  key: tr87_key
+  name: tr87_cookie
+credentials:
+  usernames:
+    alex@87trading.com:
+      email: alex@87trading.com
+      name: tr874301
+      password: $2b$12$9d0UcS0VY.ANCRsGMIFFr.sIcmarCYE7flJNeXdPvJqeYk59U3uw2
+    hassan@87trading.com:
+      email: hbahnini@hotmail.com
+      name: tr874302
+      password: $2b$12$9d0UcS0VY.ANCRsGMIFFr.sIcmarCYE7flJNeXdPvJqeYk59U3uw2
+preauthorized:
+  emails:
+  - info@87trading.com
