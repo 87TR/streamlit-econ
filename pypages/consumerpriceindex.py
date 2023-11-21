@@ -9,6 +9,8 @@ import json
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
+import datetime
+
 #Connect to tailwind
 st.markdown(
     """
@@ -90,8 +92,62 @@ st.markdown(
 
 authorization_fred = credentials.fred_apikey
 
+def fetch_data():
+    api_key = authorization_fred
+    base_url = 'https://api.stlouisfed.org/fred/series/observations'
+
+    series_mapping = {
+        'CPIAUCSL': 'All items',
+        'CUSR0000SAF11': 'Food at home',
+        'CUSR0000SEFV': 'Food away from home',
+        'CPIHOSSL': 'Housing',
+        'CUSR0000SAH1': 'Shelter',
+        'CUSR0000SEHA': 'Rent of primary residence',
+        'CUSR0000SEHB': 'Lodging away from home',
+        'CUSR0000SEHC': "Owners' equivalent rent of residences",
+        'CUSR0000SEHC01': "Owners' equivalent rent of primary residence",
+        'CUSR0000SAH2': 'Fuels and utilities',
+        'CUSR0000SAH21': 'Household energy',
+        'CPIAPPSL': 'Apparel',
+        'CPITRNSL': 'Transportation',
+        'CUSR0000SETA01': 'New vehicles',
+        'CUSR0000SETA02': 'Used cars and trucks',
+        'CUSR0000SETC': 'Motor vehicle parts and equipment',
+        'CUSR0000SETD': 'Motor vehicle maintenance and repair',
+        'CUSR0000SETG': 'Public transportation',
+        'CUSR0000SETG01': 'Airline fare',
+        'CPIMEDSL': 'Medical care',
+        'CUSR0000SEMC': 'Professional services',
+        'CUSR0000SEMC04': 'Services by other medical professionals',
+        'CPIRECSL': 'Recreation',
+        'CPIEDUSL': 'Education and communication',
+        'CUSR0000SEEE01': 'Personal computers and peripheral equipment',
+        'CPIOGSSL': 'Other goods and services',
+    }
+
+    fred_data = {}
+
+    current_date = datetime.date.today().strftime('%Y-%m-%d')
+
+    for series_id in series_mapping.keys():
+        params = {
+            'series_id': series_id,
+            'api_key': api_key,
+            'file_type': 'json',
+            'observation_start': '2020-01-01',
+            'observation_end': current_date,
+        }
+
+        response = requests.get(base_url, params=params)
+        if response.status_code == 200:
+            data = response.json()
+            data['indicator'] = series_mapping[series_id]
+            fred_data[series_id] = data
+
+    return fred_data
+
 @st.cache_data
-def fetch_data(selected_id):
+def fetch_button_data(selected_id):
     endpoint = 'https://api.stlouisfed.org/fred/series/observations'
     
     params = {
@@ -113,7 +169,7 @@ def fetch_data(selected_id):
         st.error(f"Error: {response.status_code}")
         return pd.DataFrame()
 
-def show_page1():
+def show_inflation_consumerpriceindex():
 
     if st.session_state.get("authentication_status"):
         
@@ -249,13 +305,65 @@ def show_page1():
           ]
         }
         
-        tab1a, tab2a, = st.tabs(["Overview", "Consumer Price Index"])
+        tab1a, tab2a, tab3a, tab4a = st.tabs(["Weights", "Indicators", "Search", "Links"])
 
         with tab1a:
-            st.markdown(f"<h1><b>Relevant Inflation Indicators</b></h1>", unsafe_allow_html=True)
-            st.markdown(f"<h2><u>Consumer Price Index</u></h2>", unsafe_allow_html=True)
+                st.markdown(f"<h1><b>CPI: Weights<b></h1>", unsafe_allow_html=True)
+                
+                st.markdown(f"<h2><u>Food: ±13.4%</u></h2>", unsafe_allow_html=True)
+                st.markdown(f"<h3>Food at home: ±8.6%</h3>", unsafe_allow_html=True)
+                st.markdown(f"<h3>Food away from home: ±4.8%</h3>", unsafe_allow_html=True)
+                st.markdown(f"<h2><u>Energy: ±7.2%</u></h2>", unsafe_allow_html=True)
+                st.markdown(f"<h3>Energy commodities: ±3.9%</h3>", unsafe_allow_html=True)
+                st.markdown(f"<h3>Energy services: ±3.3%</h3>", unsafe_allow_html=True)
+                st.markdown(f"<h2><u>All items less food and energy: ±79.4</u></h2>", unsafe_allow_html=True)
+                st.markdown(f"<h3>Commodities less food and energy commodities: ±21.0</h3>", unsafe_allow_html=True)
+                st.markdown(f"<h3>Services less energy services: ±58.4*</h3>", unsafe_allow_html=True)
+                st.markdown(f"<h4><i>*Shelter: ±34.9; Medical care services: ±6.324; Transportation services: ±5.9</i></h3>", unsafe_allow_html=True)
 
         with tab2a:
+
+            st.markdown(f"<h1><b>CPI: Indicators</b></h1>", unsafe_allow_html=True)
+
+            if st.button("Fetch Data", key="cpi_indicators"):
+                with st.spinner("Fetching data..."):
+                    fred_data = fetch_data()
+                    st.success("Data fetched successfully!")
+
+                for series_id, data in fred_data.items():
+                    # st.subheader(series_id)
+                    observations = data['observations']
+
+                    indicator_name = data['indicator']
+                    yy_changes = []
+
+                    for i, observation in enumerate(observations[-6:], start=-6):
+                        date = datetime.datetime.strptime(observation['date'], '%Y-%m-%d').strftime('%B %Y')
+                        value = float(observation['value'])
+
+                        yy_change_value = float(observations[i - 12]['value']) if i - 12 >= -len(observations) else float(observations[0]['value'])
+                        yy_change = value - yy_change_value
+                        yy_change_perc = (yy_change / yy_change_value) * 100
+                        yy_change_perc_decimal = round(yy_change_perc, 1)
+
+                        if yy_change_perc_decimal < -2:
+                            color = 'orange'
+                        elif -2 <= yy_change_perc_decimal <= 2:
+                            color = 'green'
+                        else:
+                            color = 'red'
+
+                        yy_change_text = f"{date}: <b><u><font color='{color}'>{yy_change_perc_decimal}%</font></u></b>"
+                        yy_changes.append(yy_change_text)
+
+                    yy_changes_text = "; ".join(yy_changes)
+
+                    st.markdown(f"<h3><b>{indicator_name}</b></h3>", unsafe_allow_html=True)
+                    st.markdown(f"<h4>{yy_changes_text}</h4>", unsafe_allow_html=True)
+
+        with tab3a:
+
+            st.markdown(f"<h1><b>CPI: Search</b></h1>", unsafe_allow_html=True)
 
             use_container_width = st.checkbox("Use container width", value=True, key="use_container_width_consumerpriceindex")
 
@@ -264,7 +372,7 @@ def show_page1():
                     if key.startswith('df_'):
                         del st.session_state[key]
 
-                fetch_data.clear()
+                fetch_button_data.clear()
 
             categories = list(json_menu.keys())
             selected_category = st.selectbox("Select a Category", categories)
@@ -273,10 +381,10 @@ def show_page1():
                 subcategories = [item["title"] for item in json_menu[selected_category]]
                 selected_subcategory = st.selectbox(f"Select a Subcategory in {selected_category}", subcategories)
 
-                if st.button('Fetch Data'):
+                if st.button('Fetch Data', key="cpi_search"):
                     if selected_subcategory:
                         selected_id = next(item["id"] for item in json_menu[selected_category] if item["title"] == selected_subcategory)
-                        df_consumerpriceindex = fetch_data(selected_id)
+                        df_consumerpriceindex = fetch_button_data(selected_id)
                         if not df_consumerpriceindex.empty:
                             
                             st.session_state['df_consumerpriceindex'] = df_consumerpriceindex
@@ -319,6 +427,7 @@ def show_page1():
                     df_consumerpriceindex = st.session_state['df_consumerpriceindex']
 
                     st.markdown(f"<h1><b>Data Observations:</b></h1>", unsafe_allow_html=True)
+                    st.markdown(f"<h4>* Data Seasonally Adjusted</h4>", unsafe_allow_html=True)
                     df_consumerpriceindexdisplay = df_consumerpriceindex.head(48)
                     df_consumerpriceindexdisplay = df_consumerpriceindexdisplay.reset_index(drop=True)
                     st.dataframe(df_consumerpriceindexdisplay, use_container_width=use_container_width)
@@ -387,5 +496,15 @@ def show_page1():
                         st.markdown(f"<h3><u>{category_title}</u></h3>", unsafe_allow_html=True)
                         st.altair_chart(final_chart, use_container_width=True)
 
+        with tab4a:
+            st.markdown(f"<h1><b>CPI: Links</b></h1>", unsafe_allow_html=True)
+            st.markdown(f"<h3>Table 1. Consumer Price Index for All Urban Consumers (CPI-U): U.S. city average, by expenditure category <a href='https://www.bls.gov/web/cpi/cpipress1.xlsx'>(XLSX)</a></h3>", unsafe_allow_html=True)
+            st.markdown(f"<h3>Table 2. Consumer Price Index for All Urban Consumers (CPI-U): U.S. city average, by detailed expenditure category <a href='https://www.bls.gov/web/cpi/cpipress2.xlsx'>(XLSX)</a></h3>", unsafe_allow_html=True)
+            st.markdown(f"<h3>Table 3. Consumer Price Index for All Urban Consumers (CPI-U): U.S. city average, special aggregate indexes <a href='https://www.bls.gov/web/cpi/cpipress3.xlsx'>(XLSX)</a></h3>", unsafe_allow_html=True)
+            st.markdown(f"<h3>Table 4. Consumer Price Index for All Urban Consumers (CPI-U): Selected areas, all items index <a href='https://www.bls.gov/web/cpi/cpipress4.xlsx'>(XLSX)</a></h3>", unsafe_allow_html=True)
+            st.markdown(f"<h3>Table 5. Chained Consumer Price Index for All Urban Consumers (C-CPI-U) and the Consumer Price Index for All Urban Consumers (CPI-U): U.S. city average, all items index <a href='https://www.bls.gov/web/cpi/cpipress5.xlsx'>(XLSX)</a></h3>", unsafe_allow_html=True)
+            st.markdown(f"<h3>Table 6. Consumer Price Index for All Urban Consumers (CPI-U): U.S. city average, by expenditure category, 1-month analysis table <a href='https://www.bls.gov/web/cpi/cpipress6.xlsx'>(XLSX)</a></h3>", unsafe_allow_html=True)
+            st.markdown(f"<h3>Table 7. Consumer Price Index for All Urban Consumers (CPI-U): U.S. city average, by expenditure category, 12-month analysis table <a href='https://www.bls.gov/web/cpi/cpipress7.xlsx'>(XLSX)</a></h3>", unsafe_allow_html=True)
+
 # Display the page
-show_page1()
+show_inflation_consumerpriceindex()
