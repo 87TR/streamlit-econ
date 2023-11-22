@@ -126,13 +126,13 @@ def show_consumptionincome_autotrucksales():
 
     if st.session_state.get("authentication_status"):
 
-        tab1a, = st.tabs(["Summary"])
+        tab1a, = st.tabs(["Seasonally Adjusted"])
 
         with tab1a:
 
-            st.markdown("<h1><b>Auto & Truck Sales: Summary</b></h1>", unsafe_allow_html=True)
+            st.markdown("<h1><b>Auto & Truck Sales</b><small><small><small> | U.S. Bureau of Economic Analysis</small></small></small></h1>", unsafe_allow_html=True)
 
-            if st.button("Fetch Data", key="autotrucksales"):
+            if st.button("Fetch Data", key="autotrucksales_seasonallyadjusted"):
                 with st.spinner("Fetching data..."):
                     fred_data = fetch_data()
 
@@ -165,7 +165,8 @@ def show_consumptionincome_autotrucksales():
 
                         use_container_width = st.checkbox(f"Use container width ({indicator_name})", value=True, key=f"use_container_width_{series_id}")
                         df = df.head(48)
+                        df = df.reset_index(drop=True)
                         st.dataframe(df[['date', 'value', 'indicator', 'series_id']], use_container_width=use_container_width)
-
+                        
 # Display the page
 show_consumptionincome_autotrucksales()
