@@ -16,7 +16,7 @@ st.set_page_config(
 from streamlit_option_menu import option_menu
 import yaml
 import bcrypt
-from pypages import show_inflation_consumerpriceindex, show_moneybankingcredit_h41
+from pypages import show_inflation_consumerpriceindex, show_moneybankingcredit_h41, show_consumptionincome_autotrucksales
 
 import pandas as pd
 from datetime import datetime, timedelta
@@ -282,6 +282,8 @@ def main():
             show_inflation_consumerpriceindex()
         elif sub_choice == "H.4.1": 
             show_moneybankingcredit_h41()
+        elif sub_choice == "Auto & Truck Sales": 
+            show_consumptionincome_autotrucksales()
 
     else:
         centered_col = st.columns([1, 1, 1])

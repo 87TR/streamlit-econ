@@ -11,7 +11,6 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 import datetime
 
-#Connect to tailwind
 st.markdown(
     """
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
@@ -19,7 +18,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Include the Inter font stylesheet 
 st.markdown(
     """
     <style>
@@ -172,163 +170,73 @@ def fetch_button_data(selected_id):
 def show_inflation_consumerpriceindex():
 
     if st.session_state.get("authentication_status"):
-        
-        json_menu = {
-          "Overall Consumer Prices": [
-            {"title": "All Items in U.S. City Average", "id": "CPIAUCSL"},
-          ],
-          "Core Consumer Prices (excluding Food and Energy)": [
-            {"title": "All Items Less Food and Energy in U.S. City Average", "id": "CPILFESL"},
-            {"title": "All Items Less Medical Care in U.S. City Average", "id": "CUSR0000SA0L5"},
-            {"title": "All Items Less Food in U.S. City Average", "id": "CPIULFSL"},
-            {"title": "Commodities Less Food and Energy Commodities in U.S. City Average", "id": "CUSR0000SACL1E"},
-            {"title": "All Items Less Energy in U.S. City Average", "id": "CPILEGSL"},
-            {"title": "Nondurables Less Food and Apparel in U.S. City Average", "id": "CUSR0000SANL13"},
-            {"title": "Nondurables Less Food, Beverages, and Apparel in U.S. City Average", "id": "CUSR0000SANL113"},
-            {"title": "Nondurables Less Food and Beverages in U.S. City Average", "id": "CUSR0000SANL11"},
-            {"title": "Nondurables Less Food in U.S. City Average", "id": "CUSR0000SANL1"},
-            {"title": "Commodities Less Food and Beverages in U.S. City Average", "id": "CUSR0000SACL11"},
-            {"title": "Commodities Less Food in U.S. City Average", "id": "CUSR0000SACL1"},
-          ],
-          "Healthcare and Medical Services": [
-            {"title": "Hospital and Related Services in U.S. City Average", "id": "CUSR0000SEMD"},
-            {"title": "Medical Care in U.S. City Average", "id": "CPIMEDSL"},
-            {"title": "Medical Care Services in U.S. City Average", "id": "CUSR0000SAM2"},
-            {"title": "Medical Care Commodities in U.S. City Average", "id": "CUSR0000SAM1"},
-            {"title": "Services by Other Medical Professionals in U.S. City Average", "id": "CUSR0000SEMC04"},
-          ],
-          "Transportation and Vehicles": [
-            {"title": "Transportation Services in U.S. City Average", "id": "CUSR0000SAS4"},
-            {"title": "Used Cars and Trucks in U.S. City Average", "id": "CUSR0000SETA02"},
-            {"title": "New Vehicles in U.S. City Average", "id": "CUSR0000SETA01"},
-            {"title": "Airline Fares in U.S. City Average", "id": "CUSR0000SETG01"},
-            {"title": "Transportation in U.S. City Average", "id": "CPITRNSL"},
-            {"title": "Motor Vehicle Maintenance and Repair in U.S. City Average", "id": "CUSR0000SETD"},
-            {"title": "New and Used Motor Vehicles in U.S. City Average", "id": "CUSR0000SETA"},
-            {"title": "Public Transportation in U.S. City Average", "id": "CUSR0000SETG"},
-            {"title": "Private Transportation in U.S. City Average", "id": "CUSR0000SAT1"},
-          ],
-          "Energy and Utilities": [
-            {"title": "Energy Commodities in U.S. City Average", "id": "CUSR0000SACE"},
-            {"title": "Motor Fuel in U.S. City Average", "id": "CUSR0000SETB"},
-            {"title": "Energy in U.S. City Average", "id": "CPIENGSL"},
-            {"title": "Electricity in U.S. City Average", "id": "CUSR0000SEHF01"},
-            {"title": "Gasoline (All Types) in U.S. City Average", "id": "CUSR0000SETB01"},
-            {"title": "Household Energy in U.S. City Average", "id": "CUSR0000SAH21"},
-            {"title": "Water and Sewer and Trash Collection Services in U.S. City Average", "id": "CUSR0000SEHG"},
-            {"title": "Fuels and Utilities in U.S. City Average", "id": "CUSR0000SAH2"},
-            {"title": "Fuel Oil and Other Fuels in U.S. City Average", "id": "CUSR0000SEHE"},
-            {"title": "Utility (Piped) Gas Service in U.S. City Average", "id": "CUSR0000SEHF02"},
-            {"title": "Energy Services in U.S. City Average", "id": "CUSR0000SEHF"},  
-          ],
-          "Food and Beverages": [
-            {"title": "Dairy and Related Products in U.S. City Average", "id": "CUSR0000SEFJ"},
-            {"title": "Food in U.S. City Average", "id": "CPIUFDSL"},
-            {"title": "Food at Home in U.S. City Average", "id": "CUSR0000SAF11"},
-            {"title": "Food Away from Home in U.S. City Average", "id": "CUSR0000SEFV"},
-            {"title": "Food and Beverages in U.S. City Average", "id": "CPIFABSL"},
-            {"title": "Alcoholic Beverages at Home in U.S. City Average", "id": "CUSR0000SEFW"},
-            {"title": "Sugar and Sweets in U.S. City Average", "id": "CUSR0000SEFR"},
-            {"title": "Pet Food in U.S. City Average", "id": "CUSR0000SS61031"},
-            {"title": "Meats, Poultry, Fish, and Eggs in U.S. City Average", "id": "CUSR0000SAF112"},
-            {"title": "Fruits and Vegetables in U.S. City Average", "id": "CUSR0000SAF113"},
-            {"title": "Alcoholic Beverages in U.S. City Average", "id": "CUSR0000SAF116"},
-            {"title": "Nonalcoholic Beverages and Beverage Materials in U.S. City Average", "id": "CUSR0000SAF114"},
-            {"title": "Alcoholic Beverages Away from Home in U.S. City Average", "id": "CUSR0000SEFX"},
-            {"title": "Fats and Oils in U.S. City Average", "id": "CUSR0000SEFS"},
-            {"title": "Other Foods in U.S. City Average", "id": "CUSR0000SEFT"},
-            {"title": "Other Food Away from Home in U.S. City Average", "id": "CUSR0000SEFV05"},
-            {"title": "Alcoholic Beverages Away from Home in U.S. City Average", "id": "CUSR0000SEFX"},
-            {"title": "Fats and Oils in U.S. City Average", "id": "CUSR0000SEFS"},
-            {"title": "Other Foods in U.S. City Average", "id": "CUSR0000SEFT"},
-            {"title": "Other Food Away from Home in U.S. City Average", "id": "CUSR0000SEFV05"},
-          ],
-          "Housing and Shelter": [
-            {"title": "Shelter in U.S. City Average", "id": "CUSR0000SAH1"},
-            {"title": "Rent of Primary Residence in U.S. City Average", "id": "CUSR0000SEHA"},
-            {"title": "Owners' Equivalent Rent of Residences in U.S. City Average", "id": "CUSR0000SEHC"},
-            {"title": "Housing in U.S. City Average", "id": "CPIHOSSL"},
-            {"title": "Rent of Shelter in U.S. City Average", "id": "CUSR0000SAS2RS"},
-            {"title": "Lodging Away from Home in U.S. City Average", "id": "CUSR0000SEHB"},
-            {"title": "Owners' Equivalent Rent of Primary Residence in U.S. City Average", "id": "CUSR0000SEHC01"},
-            {"title": "Household Furnishings and Operations in U.S. City Average", "id": "CUSR0000SAH3"},
-          ],
-          "Apparel and Footwear": [
-            {"title": "Apparel in U.S. City Average", "id": "CPIAPPSL"},
-            {"title": "Footwear in U.S. City Average", "id": "CUSR0000SEAE"},
-            {"title": "Women's and Girls' Apparel in U.S. City Average", "id": "CUSR0000SAA2"},
-            {"title": "Men's and Boys' Apparel in U.S. City Average", "id": "CUSR0000SAA1"},
-            {"title": "Infants' and Toddlers' Apparel in U.S. City Average", "id": "CUSR0000SEAF"},
-            {"title": "Apparel Less Footwear in U.S. City Average", "id": "CUSR0000SA311"},
-          ],
-          "Education and Communication": [
-            {"title": "Education in U.S. City Average", "id": "CUSR0000SAE1"},
-            {"title": "Education and Communication in U.S. City Average", "id": "CPIEDUSL"},
-            {"title": "Tuition, Other School Fees, and Childcare in U.S. City Average", "id": "CUSR0000SEEB"},
-            {"title": "Information Technology, Hardware and Services in U.S. City Average", "id": "CUSR0000SEEE"},
-            {"title": "Communication in U.S. City Average", "id": "CUSR0000SAE2"},
-            {"title": "Computers, Peripherals, and Smart Home Assistants in U.S. City Average", "id": "CUSR0000SEEE01"},
-            {"title": "Cable, Satellite, and Live Streaming Television Service in U.S. City Average", "id": "CUSR0000SERA02"},
-            {"title": "Educational Books and Supplies in U.S. City Average", "id": "CUSR0000SEEA"},
-            {"title": "Information and Information Processing in U.S. City Average", "id": "CUSR0000SAE21"},
-          ],
-          "Recreation and Leisure": [
-            {"title": "Club Membership for Shopping Clubs, Fraternal, or Other Organizations, or Participant Sports Fees in U.S. City Average", "id": "CUSR0000SERF01"},
-            {"title": "Admission to Movies, Theaters, and Concerts in U.S. City Average", "id": "CUSR0000SS62031"},
-            {"title": "Recreation in U.S. City Average", "id": "CPIRECSL"},
-            {"title": "Video and Audio in U.S. City Average", "id": "CUSR0000SERA"},
-            {"title": "Video and Audio Products in U.S. City Average", "id": "CUSR0000SERAC"},
-            {"title": "Music Instruments and Accessories in U.S. City Average", "id": "CUSR0000SERE03"},
-            {"title": "Fees for Lessons or Instructions in U.S. City Average", "id": "CUSR0000SERF03"},
-          ],
-          "Services": [
-            {"title": "Services Less Energy Services in U.S. City Average", "id": "CUSR0000SASLE"},
-            {"title": "Services in U.S. City Average", "id": "CUSR0000SAS"},
-            {"title": "Professional Services in U.S. City Average", "id": "CUSR0000SEMC"},
-            {"title": "Personal Care in U.S. City Average", "id": "CUSR0000SAG1"},
-            {"title": "Services Less Rent of Shelter in U.S. City Average", "id": "CUSR0000SASL2RS"},
-            {"title": "Laundry and Dry Cleaning Services in U.S. City Average", "id": "CUSR0000SEGD03"},
-            {"title": "Other Services in U.S. City Average", "id": "CUSR0000SAS367"},
-            {"title": "Services Less Medical Care Services in U.S. City Average", "id": "CUSR0000SASL5"},
-          ],
-          "Durables and Non-Durables": [
-            {"title": "Durables in U.S. City Average", "id": "CUSR0000SAD"},
-            {"title": "Nondurables in U.S. City Average", "id": "CUSR0000SAN"},
-            {"title": "Motor Vehicle Parts and Equipment in U.S. City Average", "id": "CUSR0000SETC"},
-            {"title": "Tobacco and Smoking Products in U.S. City Average", "id": "CUSR0000SEGA"},
-            {"title": "Toys in U.S. City Average", "id": "CUSR0000SERE01"},  
-          ],
-          "Miscellaneous Goods and Services": [
-            {"title": "Miscellaneous Personal Services in U.S. City Average", "id": "CUSR0000SEGD"},
-            {"title": "Commodities in U.S. City Average", "id": "CUSR0000SAC"},
-            {"title": "Other Goods and Services in U.S. City Average", "id": "CPIOGSSL"},
-          ]
-        }
-        
-        tab1a, tab2a, tab3a, tab4a = st.tabs(["Weights", "Indicators", "Search", "Links"])
+                
+        tab1a, tab2a, tab3a, tab4a = st.tabs(["Weights", "Summary", "Search", "Links"])
 
         with tab1a:
-                st.markdown(f"<h1><b>CPI: Weights<b></h1>", unsafe_allow_html=True)
+
+            st.markdown("<h1><b>CPI: Weights<b></h1>", unsafe_allow_html=True)
+
+            col1, col2 = st.columns(2)
+
+            with col1:
+                st.markdown("<h2><u>Food: ±13.4%</u></h2>", unsafe_allow_html=True)
+                st.markdown("<h3>Food at home: ±8.6%</h3>", unsafe_allow_html=True)
+                st.markdown("<h3>Food away from home: ±4.8%</h3>", unsafe_allow_html=True)
+                st.markdown("<h2><u>Energy: ±7.2%</u></h2>", unsafe_allow_html=True)
+                st.markdown("<h3>Energy commodities: ±3.9%</h3>", unsafe_allow_html=True)
+                st.markdown("<h3>Energy services: ±3.3%</h3>", unsafe_allow_html=True)
+                st.markdown("<h2><u>All items less food and energy: ±79.4</u></h2>", unsafe_allow_html=True)
+                st.markdown("<h3>Commodities less food and energy commodities: ±21.0</h3>", unsafe_allow_html=True)
+                st.markdown("<h3>Services less energy services: ±58.4*</h3>", unsafe_allow_html=True)
+                st.markdown("<h4><i>*Shelter: ±34.9; Medical care services: ±6.324; Transportation services: ±5.9</i></h3>", unsafe_allow_html=True)
+
+            with col2:
                 
-                st.markdown(f"<h2><u>Food: ±13.4%</u></h2>", unsafe_allow_html=True)
-                st.markdown(f"<h3>Food at home: ±8.6%</h3>", unsafe_allow_html=True)
-                st.markdown(f"<h3>Food away from home: ±4.8%</h3>", unsafe_allow_html=True)
-                st.markdown(f"<h2><u>Energy: ±7.2%</u></h2>", unsafe_allow_html=True)
-                st.markdown(f"<h3>Energy commodities: ±3.9%</h3>", unsafe_allow_html=True)
-                st.markdown(f"<h3>Energy services: ±3.3%</h3>", unsafe_allow_html=True)
-                st.markdown(f"<h2><u>All items less food and energy: ±79.4</u></h2>", unsafe_allow_html=True)
-                st.markdown(f"<h3>Commodities less food and energy commodities: ±21.0</h3>", unsafe_allow_html=True)
-                st.markdown(f"<h3>Services less energy services: ±58.4*</h3>", unsafe_allow_html=True)
-                st.markdown(f"<h4><i>*Shelter: ±34.9; Medical care services: ±6.324; Transportation services: ±5.9</i></h3>", unsafe_allow_html=True)
+                categories = ["Food", "Energy", "All items less food and energy"]
+                weights = [13.4, 7.2, 79.4]
+
+                data = pd.DataFrame({'Category': categories, 'Weight': weights})
+
+                pie_chart = alt.Chart(data).mark_arc().encode(
+                    theta=alt.Theta(field="Weight", type="quantitative"),
+                    color=alt.Color(field="Category", type="nominal"),
+                    tooltip=['Category', 'Weight']
+                ).properties(
+                    title='CPI: All items',
+                    width=200,
+                    height=200 
+                )
+
+                st.altair_chart(pie_chart, use_container_width=True)
+
+                categories = ["Commodities less food and energy commodities", "Services less energy services"]
+                weights = [21.0, 58.4]
+
+                # Create a DataFrame
+                data = pd.DataFrame({'Category': categories, 'Weight': weights})
+
+                # Create a pie chart
+                pie_chart = alt.Chart(data).mark_arc().encode(
+                    theta=alt.Theta(field="Weight", type="quantitative"),
+                    color=alt.Color(field="Category", type="nominal"),
+                    tooltip=['Category', 'Weight']
+                ).properties(
+                    title='CPI: All items less food and energy',
+                    width=200,
+                    height=200 
+                )
+
+                st.altair_chart(pie_chart, use_container_width=True)
 
         with tab2a:
 
-            st.markdown(f"<h1><b>CPI: Indicators</b></h1>", unsafe_allow_html=True)
+            st.markdown(f"<h1><b>CPI: Summary</b></h1>", unsafe_allow_html=True)
 
-            if st.button("Fetch Data", key="cpi_indicators"):
+            if st.button("Fetch Data", key="cpi_summary"):
                 with st.spinner("Fetching data..."):
                     fred_data = fetch_data()
-                    st.success("Data fetched successfully!")
+                    #st.success("Data fetched successfully!", icon="⚠️")
 
                 for series_id, data in fred_data.items():
                     # st.subheader(series_id)
@@ -364,6 +272,138 @@ def show_inflation_consumerpriceindex():
         with tab3a:
 
             st.markdown(f"<h1><b>CPI: Search</b></h1>", unsafe_allow_html=True)
+
+            json_menu = {
+              "Overall Consumer Prices": [
+                {"title": "All Items in U.S. City Average", "id": "CPIAUCSL"},
+              ],
+              "Core Consumer Prices (excluding Food and Energy)": [
+                {"title": "All Items Less Food and Energy in U.S. City Average", "id": "CPILFESL"},
+                {"title": "All Items Less Medical Care in U.S. City Average", "id": "CUSR0000SA0L5"},
+                {"title": "All Items Less Food in U.S. City Average", "id": "CPIULFSL"},
+                {"title": "Commodities Less Food and Energy Commodities in U.S. City Average", "id": "CUSR0000SACL1E"},
+                {"title": "All Items Less Energy in U.S. City Average", "id": "CPILEGSL"},
+                {"title": "Nondurables Less Food and Apparel in U.S. City Average", "id": "CUSR0000SANL13"},
+                {"title": "Nondurables Less Food, Beverages, and Apparel in U.S. City Average", "id": "CUSR0000SANL113"},
+                {"title": "Nondurables Less Food and Beverages in U.S. City Average", "id": "CUSR0000SANL11"},
+                {"title": "Nondurables Less Food in U.S. City Average", "id": "CUSR0000SANL1"},
+                {"title": "Commodities Less Food and Beverages in U.S. City Average", "id": "CUSR0000SACL11"},
+                {"title": "Commodities Less Food in U.S. City Average", "id": "CUSR0000SACL1"},
+              ],
+              "Healthcare and Medical Services": [
+                {"title": "Hospital and Related Services in U.S. City Average", "id": "CUSR0000SEMD"},
+                {"title": "Medical Care in U.S. City Average", "id": "CPIMEDSL"},
+                {"title": "Medical Care Services in U.S. City Average", "id": "CUSR0000SAM2"},
+                {"title": "Medical Care Commodities in U.S. City Average", "id": "CUSR0000SAM1"},
+                {"title": "Services by Other Medical Professionals in U.S. City Average", "id": "CUSR0000SEMC04"},
+              ],
+              "Transportation and Vehicles": [
+                {"title": "Transportation Services in U.S. City Average", "id": "CUSR0000SAS4"},
+                {"title": "Used Cars and Trucks in U.S. City Average", "id": "CUSR0000SETA02"},
+                {"title": "New Vehicles in U.S. City Average", "id": "CUSR0000SETA01"},
+                {"title": "Airline Fares in U.S. City Average", "id": "CUSR0000SETG01"},
+                {"title": "Transportation in U.S. City Average", "id": "CPITRNSL"},
+                {"title": "Motor Vehicle Maintenance and Repair in U.S. City Average", "id": "CUSR0000SETD"},
+                {"title": "New and Used Motor Vehicles in U.S. City Average", "id": "CUSR0000SETA"},
+                {"title": "Public Transportation in U.S. City Average", "id": "CUSR0000SETG"},
+                {"title": "Private Transportation in U.S. City Average", "id": "CUSR0000SAT1"},
+              ],
+              "Energy and Utilities": [
+                {"title": "Energy Commodities in U.S. City Average", "id": "CUSR0000SACE"},
+                {"title": "Motor Fuel in U.S. City Average", "id": "CUSR0000SETB"},
+                {"title": "Energy in U.S. City Average", "id": "CPIENGSL"},
+                {"title": "Electricity in U.S. City Average", "id": "CUSR0000SEHF01"},
+                {"title": "Gasoline (All Types) in U.S. City Average", "id": "CUSR0000SETB01"},
+                {"title": "Household Energy in U.S. City Average", "id": "CUSR0000SAH21"},
+                {"title": "Water and Sewer and Trash Collection Services in U.S. City Average", "id": "CUSR0000SEHG"},
+                {"title": "Fuels and Utilities in U.S. City Average", "id": "CUSR0000SAH2"},
+                {"title": "Fuel Oil and Other Fuels in U.S. City Average", "id": "CUSR0000SEHE"},
+                {"title": "Utility (Piped) Gas Service in U.S. City Average", "id": "CUSR0000SEHF02"},
+                {"title": "Energy Services in U.S. City Average", "id": "CUSR0000SEHF"},  
+              ],
+              "Food and Beverages": [
+                {"title": "Dairy and Related Products in U.S. City Average", "id": "CUSR0000SEFJ"},
+                {"title": "Food in U.S. City Average", "id": "CPIUFDSL"},
+                {"title": "Food at Home in U.S. City Average", "id": "CUSR0000SAF11"},
+                {"title": "Food Away from Home in U.S. City Average", "id": "CUSR0000SEFV"},
+                {"title": "Food and Beverages in U.S. City Average", "id": "CPIFABSL"},
+                {"title": "Alcoholic Beverages at Home in U.S. City Average", "id": "CUSR0000SEFW"},
+                {"title": "Sugar and Sweets in U.S. City Average", "id": "CUSR0000SEFR"},
+                {"title": "Pet Food in U.S. City Average", "id": "CUSR0000SS61031"},
+                {"title": "Meats, Poultry, Fish, and Eggs in U.S. City Average", "id": "CUSR0000SAF112"},
+                {"title": "Fruits and Vegetables in U.S. City Average", "id": "CUSR0000SAF113"},
+                {"title": "Alcoholic Beverages in U.S. City Average", "id": "CUSR0000SAF116"},
+                {"title": "Nonalcoholic Beverages and Beverage Materials in U.S. City Average", "id": "CUSR0000SAF114"},
+                {"title": "Alcoholic Beverages Away from Home in U.S. City Average", "id": "CUSR0000SEFX"},
+                {"title": "Fats and Oils in U.S. City Average", "id": "CUSR0000SEFS"},
+                {"title": "Other Foods in U.S. City Average", "id": "CUSR0000SEFT"},
+                {"title": "Other Food Away from Home in U.S. City Average", "id": "CUSR0000SEFV05"},
+                {"title": "Alcoholic Beverages Away from Home in U.S. City Average", "id": "CUSR0000SEFX"},
+                {"title": "Fats and Oils in U.S. City Average", "id": "CUSR0000SEFS"},
+                {"title": "Other Foods in U.S. City Average", "id": "CUSR0000SEFT"},
+                {"title": "Other Food Away from Home in U.S. City Average", "id": "CUSR0000SEFV05"},
+              ],
+              "Housing and Shelter": [
+                {"title": "Shelter in U.S. City Average", "id": "CUSR0000SAH1"},
+                {"title": "Rent of Primary Residence in U.S. City Average", "id": "CUSR0000SEHA"},
+                {"title": "Owners' Equivalent Rent of Residences in U.S. City Average", "id": "CUSR0000SEHC"},
+                {"title": "Housing in U.S. City Average", "id": "CPIHOSSL"},
+                {"title": "Rent of Shelter in U.S. City Average", "id": "CUSR0000SAS2RS"},
+                {"title": "Lodging Away from Home in U.S. City Average", "id": "CUSR0000SEHB"},
+                {"title": "Owners' Equivalent Rent of Primary Residence in U.S. City Average", "id": "CUSR0000SEHC01"},
+                {"title": "Household Furnishings and Operations in U.S. City Average", "id": "CUSR0000SAH3"},
+              ],
+              "Apparel and Footwear": [
+                {"title": "Apparel in U.S. City Average", "id": "CPIAPPSL"},
+                {"title": "Footwear in U.S. City Average", "id": "CUSR0000SEAE"},
+                {"title": "Women's and Girls' Apparel in U.S. City Average", "id": "CUSR0000SAA2"},
+                {"title": "Men's and Boys' Apparel in U.S. City Average", "id": "CUSR0000SAA1"},
+                {"title": "Infants' and Toddlers' Apparel in U.S. City Average", "id": "CUSR0000SEAF"},
+                {"title": "Apparel Less Footwear in U.S. City Average", "id": "CUSR0000SA311"},
+              ],
+              "Education and Communication": [
+                {"title": "Education in U.S. City Average", "id": "CUSR0000SAE1"},
+                {"title": "Education and Communication in U.S. City Average", "id": "CPIEDUSL"},
+                {"title": "Tuition, Other School Fees, and Childcare in U.S. City Average", "id": "CUSR0000SEEB"},
+                {"title": "Information Technology, Hardware and Services in U.S. City Average", "id": "CUSR0000SEEE"},
+                {"title": "Communication in U.S. City Average", "id": "CUSR0000SAE2"},
+                {"title": "Computers, Peripherals, and Smart Home Assistants in U.S. City Average", "id": "CUSR0000SEEE01"},
+                {"title": "Cable, Satellite, and Live Streaming Television Service in U.S. City Average", "id": "CUSR0000SERA02"},
+                {"title": "Educational Books and Supplies in U.S. City Average", "id": "CUSR0000SEEA"},
+                {"title": "Information and Information Processing in U.S. City Average", "id": "CUSR0000SAE21"},
+              ],
+              "Recreation and Leisure": [
+                {"title": "Club Membership for Shopping Clubs, Fraternal, or Other Organizations, or Participant Sports Fees in U.S. City Average", "id": "CUSR0000SERF01"},
+                {"title": "Admission to Movies, Theaters, and Concerts in U.S. City Average", "id": "CUSR0000SS62031"},
+                {"title": "Recreation in U.S. City Average", "id": "CPIRECSL"},
+                {"title": "Video and Audio in U.S. City Average", "id": "CUSR0000SERA"},
+                {"title": "Video and Audio Products in U.S. City Average", "id": "CUSR0000SERAC"},
+                {"title": "Music Instruments and Accessories in U.S. City Average", "id": "CUSR0000SERE03"},
+                {"title": "Fees for Lessons or Instructions in U.S. City Average", "id": "CUSR0000SERF03"},
+              ],
+              "Services": [
+                {"title": "Services Less Energy Services in U.S. City Average", "id": "CUSR0000SASLE"},
+                {"title": "Services in U.S. City Average", "id": "CUSR0000SAS"},
+                {"title": "Professional Services in U.S. City Average", "id": "CUSR0000SEMC"},
+                {"title": "Personal Care in U.S. City Average", "id": "CUSR0000SAG1"},
+                {"title": "Services Less Rent of Shelter in U.S. City Average", "id": "CUSR0000SASL2RS"},
+                {"title": "Laundry and Dry Cleaning Services in U.S. City Average", "id": "CUSR0000SEGD03"},
+                {"title": "Other Services in U.S. City Average", "id": "CUSR0000SAS367"},
+                {"title": "Services Less Medical Care Services in U.S. City Average", "id": "CUSR0000SASL5"},
+              ],
+              "Durables and Non-Durables": [
+                {"title": "Durables in U.S. City Average", "id": "CUSR0000SAD"},
+                {"title": "Nondurables in U.S. City Average", "id": "CUSR0000SAN"},
+                {"title": "Motor Vehicle Parts and Equipment in U.S. City Average", "id": "CUSR0000SETC"},
+                {"title": "Tobacco and Smoking Products in U.S. City Average", "id": "CUSR0000SEGA"},
+                {"title": "Toys in U.S. City Average", "id": "CUSR0000SERE01"},  
+              ],
+              "Miscellaneous Goods and Services": [
+                {"title": "Miscellaneous Personal Services in U.S. City Average", "id": "CUSR0000SEGD"},
+                {"title": "Commodities in U.S. City Average", "id": "CUSR0000SAC"},
+                {"title": "Other Goods and Services in U.S. City Average", "id": "CPIOGSSL"},
+              ]
+            }
 
             use_container_width = st.checkbox("Use container width", value=True, key="use_container_width_consumerpriceindex")
 

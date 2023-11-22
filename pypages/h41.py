@@ -9,7 +9,6 @@ import json
 from requests.packages.urllib3.exceptions import InsecureRequestWarning
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-#Connect to tailwind
 st.markdown(
     """
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
@@ -17,7 +16,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Include the Inter font stylesheet 
 st.markdown(
     """
     <style>

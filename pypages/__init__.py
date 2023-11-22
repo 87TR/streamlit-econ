@@ -1,2 +1,3 @@
 from .consumerpriceindex import show_inflation_consumerpriceindex
 from .h41 import show_moneybankingcredit_h41
+from .autotrucksales import show_consumptionincome_autotrucksales
