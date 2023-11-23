@@ -95,10 +95,10 @@ def fetch_data_sa():
     base_url = 'https://api.stlouisfed.org/fred/series/observations'
 
     series_mapping = {
-        'TOTALSA': 'Total Vehicles SA',
-        'LAUTOSA': 'Unit Auto Sales SA',
-        'LTRUCKSA': 'Light Trucks SA',
-        'HTRUCKSSAAR': 'Heavy Trucks SA',
+        'ICSA': 'Initial Claims SA',
+        'IC4WSA': 'Initial Claims SA - 4WMA',
+        'CCSA': 'Insured Unemployment SA',
+        'CC4WSA': 'Insured Unemployment SA - 4WMA',
     }
 
     fred_data = {}
@@ -127,10 +127,8 @@ def fetch_data_nsa():
     base_url = 'https://api.stlouisfed.org/fred/series/observations'
 
     series_mapping = {
-        'TOTALNSA': 'Total Vehicles NSA',
-        'LAUTONSA': 'Unit Auto Sales NSA',
-        'LTRUCKNSA': 'Light Trucks NSA',
-        'HTRUCKSNSA': 'Heavy Trucks NSA',
+        'ICNSA': 'Initial Claims NSA',
+        'CCNSA': 'Insured Unemployment NSA',
     }
 
     fred_data = {}
@@ -154,7 +152,7 @@ def fetch_data_nsa():
 
     return fred_data
 
-def show_consumptionincome_autotrucksales():
+def show_labormarket_unemploymentinsuranceclaims():
 
     if st.session_state.get("authentication_status"):
 
@@ -162,17 +160,17 @@ def show_consumptionincome_autotrucksales():
 
         with tab1a:
 
-            st.markdown("<h1><b>Auto & Truck Sales (SA)</b><small><small><small> | U.S. Bureau of Economic Analysis</small></small></small></h1>", unsafe_allow_html=True)
+            st.markdown("<h1><b>Unemployment Insurance Claims (SA)</b><small><small><small> | U.S. Department of Labor</small></small></small></h1>", unsafe_allow_html=True)
 
-            if st.button("Fetch Data", key="autotrucksales_seasonallyadjusted"):
+            if st.button("Fetch Data", key="unemploymentinsuranceclaims_seasonallyadjusted"):
                 with st.spinner("Fetching data..."):
                     fred_data = fetch_data_sa()
 
                     series_mapping_sa = {
-                        'TOTALSA': 'Total Vehicles (Millions of Units)',
-                        'LAUTOSA': 'Unit Auto Sales (Millions of Units)',
-                        'LTRUCKSA': 'Light Trucks (Millions of Units)',
-                        'HTRUCKSSAAR': 'Heavy Trucks (Millions of Units)',
+                        'ICSA': 'Initial Claims SA',
+                        'IC4WSA': 'Initial Claims SA - 4WMA',
+                        'CCSA': 'Insured Unemployment SA',
+                        'CC4WSA': 'Insured Unemployment SA - 4WMA',
                     }
 
                     for series_id, observations in fred_data.items():
@@ -191,6 +189,30 @@ def show_consumptionincome_autotrucksales():
 
                         st.markdown(f'<h3><b>{indicator_name}</b> | Source: <a href="https://fred.stlouisfed.org/series/{series_id}">FRED</a></h3>', unsafe_allow_html=True)
 
+                        line_chart_last_156_weeks = alt.Chart(df.tail(156)).mark_line().encode(
+                            x='Date:T',
+                            y='Value:Q'
+                        ).properties(
+                            width=1000,
+                            height=600
+                        )
+                        st.altair_chart(line_chart_last_156_weeks)
+
+                        df['Value'] = pd.to_numeric(df['Value'], errors='coerce')
+                        df['Change'] = df['Value'] - df['Value'].shift(1)
+                        df['Change (%)'] = (df['Value'] - df['Value'].shift(1)) / df['Value'].shift(1) * 100
+                        df['Change (%)'] = df['Change (%)'].round(2)
+
+                        st.markdown("<h1><b>Change (W/W)</b></h1>", unsafe_allow_html=True)
+                        bar_chart = alt.Chart(df.tail(156)).mark_bar().encode(
+                            x='Date:T',
+                            y='Change:Q'
+                        ).properties(
+                            width=1000,
+                            height=600
+                        )
+                        st.altair_chart(bar_chart)
+
                         chart = alt.Chart(df).mark_line().encode(
                             x='Date:T',
                             y='Value:Q'
@@ -202,23 +224,21 @@ def show_consumptionincome_autotrucksales():
 
                         df = df.sort_values(by='Date', ascending=False)
                         df = df.reset_index(drop=True)
-                        df = df.head(48)
+                        df = df.head(156)
                         use_container_width = st.checkbox(f"Use container width ({indicator_name})", value=True, key=f"use_container_width_{series_id}")
-                        st.dataframe(df[['Date', 'Value', 'Indicator', 'Series ID']], use_container_width=use_container_width)
+                        st.dataframe(df[['Date', 'Value', 'Change', 'Change (%)', 'Indicator', 'Series ID']], use_container_width=use_container_width)
 
         with tab2a:
 
-            st.markdown("<h1><b>Auto & Truck Sales (NSA)</b><small><small><small> | U.S. Bureau of Economic Analysis</small></small></small></h1>", unsafe_allow_html=True)
+            st.markdown("<h1><b>Unemployment Insurance Claims (NSA)</b><small><small><small> | U.S. Department of Labor</small></small></small></h1>", unsafe_allow_html=True)
 
-            if st.button("Fetch Data", key="autotrucksales_notseasonallyadjusted"):
+            if st.button("Fetch Data", key="unemploymentinsuranceclaims_notseasonallyadjusted"):
                 with st.spinner("Fetching data..."):
                     fred_data = fetch_data_nsa()
 
                     series_mapping_nsa = {
-                        'TOTALNSA': 'Total Vehicles (Thousands of Units)',
-                        'LAUTONSA': 'Unit Auto Sales (Thousands of Units)',
-                        'LTRUCKNSA': 'Light Trucks (Thousands of Units)',
-                        'HTRUCKSNSA': 'Heavy Trucks (Thousands of Units)',
+                        'ICNSA': 'Initial Claims NSA',
+                        'CCNSA': 'Insured Unemployment NSA',
                     }
 
                     for series_id, observations in fred_data.items():
@@ -237,6 +257,30 @@ def show_consumptionincome_autotrucksales():
 
                         st.markdown(f'<h3><b>{indicator_name}</b> | Source: <a href="https://fred.stlouisfed.org/series/{series_id}">FRED</a></h3>', unsafe_allow_html=True)
 
+                        line_chart_last_156_weeks = alt.Chart(df.tail(156)).mark_line().encode(
+                            x='Date:T',
+                            y='Value:Q'
+                        ).properties(
+                            width=1000,
+                            height=600
+                        )
+                        st.altair_chart(line_chart_last_156_weeks)
+
+                        df['Value'] = pd.to_numeric(df['Value'], errors='coerce')
+                        df['Change'] = df['Value'] - df['Value'].shift(1)
+                        df['Change (%)'] = (df['Value'] - df['Value'].shift(1)) / df['Value'].shift(1) * 100
+                        df['Change (%)'] = df['Change (%)'].round(2)
+
+                        st.markdown("<h1><b>Change (W/W)</b></h1>", unsafe_allow_html=True)
+                        bar_chart = alt.Chart(df.tail(156)).mark_bar().encode(
+                            x='Date:T',
+                            y='Change:Q'
+                        ).properties(
+                            width=1000,
+                            height=600
+                        )
+                        st.altair_chart(bar_chart)
+
                         chart = alt.Chart(df).mark_line().encode(
                             x='Date:T',
                             y='Value:Q'
@@ -244,14 +288,13 @@ def show_consumptionincome_autotrucksales():
                             width=1000,
                             height=600
                         )
-
                         st.altair_chart(chart)
 
                         df = df.sort_values(by='Date', ascending=False)
                         df = df.reset_index(drop=True)
-                        df = df.head(48)
+                        df = df.head(156)
                         use_container_width = st.checkbox(f"Use container width ({indicator_name})", value=True, key=f"use_container_width_{series_id}")
-                        st.dataframe(df[['Date', 'Value', 'Indicator', 'Series ID']], use_container_width=use_container_width)
-            
+                        st.dataframe(df[['Date', 'Value', 'Change', 'Change (%)', 'Indicator', 'Series ID']], use_container_width=use_container_width)
+
 # Display the page
-show_consumptionincome_autotrucksales()
+show_labormarket_unemploymentinsuranceclaims()

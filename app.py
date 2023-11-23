@@ -16,7 +16,7 @@ st.set_page_config(
 from streamlit_option_menu import option_menu
 import yaml
 import bcrypt
-from pypages import show_inflation_consumerpriceindex, show_moneybankingcredit_h41, show_consumptionincome_autotrucksales
+from pypages import show_inflation_consumerpriceindex, show_moneybankingcredit_h41, show_consumptionincome_autotrucksales, show_labormarket_unemploymentinsuranceclaims
 
 import pandas as pd
 from datetime import datetime, timedelta
@@ -163,7 +163,7 @@ def main():
             st.markdown("<h5><b>Internal Use Only:</b> This application is exclusively for the use of 87TR employees. Access by any unauthorized personnel is strictly prohibited. If you are not a designated employee, please close this application immediately.</h5>", unsafe_allow_html=True)
 
             menu_data = {
-                "87TR's Summary": [],
+                "87TR's Data App": [],
                 "Government Finance": [
                     "Balance of Payments",
                     "Credit Ratings",
@@ -255,7 +255,7 @@ def main():
                 clear_cache_except_auth()
 
             st.markdown("""---""")
-            st.markdown("<h5><b>Data Source:</b> The data provided is exclusively owned by FactSet Research Systems Inc. and is provided for use under the terms of a licensing agreement.</h5>", unsafe_allow_html=True)
+            st.markdown("<h5><b>Data Source:</b> The data used in this application is sourced from Federal Reserve Economic Data (FRED), provided by the Federal Reserve Bank of St. Louis, and is subject to their terms and conditions.</h5>", unsafe_allow_html=True)
             st.markdown("<h5><b>Disclaimer:</b> The information provided here is for informational purposes and should not be used as a basis for investment decisions. This is not professional advice.</h5>", unsafe_allow_html=True)
 
             if st.button("Sign Out"):
@@ -276,7 +276,7 @@ def main():
             st.markdown(f"<h3><b>Software Name:</b> Economy.py</h>", unsafe_allow_html=True)
             st.markdown(f"<h3><b>Public IP:</b> {public_ip}</h3>", unsafe_allow_html=True)
 
-        if choice == "87TR's Summary":
+        if choice == "87TR's Data App":
             show_overview()
         elif sub_choice == "Consumer Price Index":
             show_inflation_consumerpriceindex()
@@ -284,6 +284,9 @@ def main():
             show_moneybankingcredit_h41()
         elif sub_choice == "Auto & Truck Sales": 
             show_consumptionincome_autotrucksales()
+        elif sub_choice == "Unemployment Insurance Claims": 
+            show_labormarket_unemploymentinsuranceclaims()
+
 
     else:
         centered_col = st.columns([1, 1, 1])
@@ -294,11 +297,12 @@ def main():
             st.markdown("<h1 style='padding-top: 5px; padding-bottom: 5px;'><b>Welcome to 87TR's Data App</b></h1>", unsafe_allow_html=True)
             st.markdown("<h3 style='padding-top: 5px; padding-bottom: 5px;'>The application specializes in tracking and analyzing a wide range of economic indicators, providing users with valuable insights into the financial landscape. It offers tools to access and interpret data related to government finance, balance of payments, consumption and income, energy, flow of funds, foreign trade, fund statistics, housing and construction, industry, inflation, labor market, leading indicators, money, banking, credit, and national accounts. This comprehensive platform empowers users to make informed decisions based on real-time economic data.</h3>", unsafe_allow_html=True)
             st.markdown("""<div style="padding-top: 20px; padding-bottom: 20px;"><hr></div>""", unsafe_allow_html=True)
+            st.success("""Explore the open-source version of this app by visiting this [link](insert_link_here).""", icon="🌎",)
 
             show_login()
 
             st.markdown("""<div style="padding-top: 20px; padding-bottom: 20px;"><hr></div>""", unsafe_allow_html=True)
-            st.markdown("<h3 style='padding-top: 5px; padding-bottom: 5px;'>If you are a new employee and need access to this data application, please connect with the 87TR Support Desk for assistance.</h3>", unsafe_allow_html=True)
+            st.markdown("<h3 style='padding-top: 5px; padding-bottom: 5px;'>If you are a new employee and need access to this data application, please connect with 87TR's Support Desk for assistance.</h3>", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
