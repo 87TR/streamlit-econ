@@ -189,6 +189,7 @@ def show_labormarket_unemploymentinsuranceclaims():
 
                         st.markdown(f'<h3><b>{indicator_name}</b> | Source: <a href="https://fred.stlouisfed.org/series/{series_id}">FRED</a></h3>', unsafe_allow_html=True)
 
+                        st.markdown("<h4><b>Last 3 Years</4></h1>", unsafe_allow_html=True)
                         line_chart_last_156_weeks = alt.Chart(df.tail(156)).mark_line().encode(
                             x='Date:T',
                             y='Value:Q'
@@ -203,7 +204,7 @@ def show_labormarket_unemploymentinsuranceclaims():
                         df['Change (%)'] = (df['Value'] - df['Value'].shift(1)) / df['Value'].shift(1) * 100
                         df['Change (%)'] = df['Change (%)'].round(2)
 
-                        st.markdown("<h1><b>Change (W/W)</b></h1>", unsafe_allow_html=True)
+                        st.markdown("<h4><b>Change (W/W)</4></h1>", unsafe_allow_html=True)
                         bar_chart = alt.Chart(df.tail(156)).mark_bar().encode(
                             x='Date:T',
                             y='Change:Q'
@@ -213,6 +214,7 @@ def show_labormarket_unemploymentinsuranceclaims():
                         )
                         st.altair_chart(bar_chart)
 
+                        st.markdown("<h4><b>Years</4></h1>", unsafe_allow_html=True)
                         chart = alt.Chart(df).mark_line().encode(
                             x='Date:T',
                             y='Value:Q'
@@ -225,7 +227,7 @@ def show_labormarket_unemploymentinsuranceclaims():
                         df = df.sort_values(by='Date', ascending=False)
                         df = df.reset_index(drop=True)
                         df = df.head(156)
-                        use_container_width = st.checkbox(f"Use container width ({indicator_name})", value=True, key=f"use_container_width_{series_id}")
+                        use_container_width = st.checkbox(f"Use container width", value=True, key=f"use_container_width_{series_id}")
                         st.dataframe(df[['Date', 'Value', 'Change', 'Change (%)', 'Indicator', 'Series ID']], use_container_width=use_container_width)
 
         with tab2a:
@@ -257,6 +259,7 @@ def show_labormarket_unemploymentinsuranceclaims():
 
                         st.markdown(f'<h3><b>{indicator_name}</b> | Source: <a href="https://fred.stlouisfed.org/series/{series_id}">FRED</a></h3>', unsafe_allow_html=True)
 
+                        st.markdown("<h4><b>Last 3 Years</4></h1>", unsafe_allow_html=True)
                         line_chart_last_156_weeks = alt.Chart(df.tail(156)).mark_line().encode(
                             x='Date:T',
                             y='Value:Q'
@@ -271,7 +274,7 @@ def show_labormarket_unemploymentinsuranceclaims():
                         df['Change (%)'] = (df['Value'] - df['Value'].shift(1)) / df['Value'].shift(1) * 100
                         df['Change (%)'] = df['Change (%)'].round(2)
 
-                        st.markdown("<h1><b>Change (W/W)</b></h1>", unsafe_allow_html=True)
+                        st.markdown("<h4><b>Change (W/W)</4></h1>", unsafe_allow_html=True)
                         bar_chart = alt.Chart(df.tail(156)).mark_bar().encode(
                             x='Date:T',
                             y='Change:Q'
@@ -281,6 +284,7 @@ def show_labormarket_unemploymentinsuranceclaims():
                         )
                         st.altair_chart(bar_chart)
 
+                        st.markdown("<h4><b>Years</4></h1>", unsafe_allow_html=True)
                         chart = alt.Chart(df).mark_line().encode(
                             x='Date:T',
                             y='Value:Q'
@@ -293,7 +297,7 @@ def show_labormarket_unemploymentinsuranceclaims():
                         df = df.sort_values(by='Date', ascending=False)
                         df = df.reset_index(drop=True)
                         df = df.head(156)
-                        use_container_width = st.checkbox(f"Use container width ({indicator_name})", value=True, key=f"use_container_width_{series_id}")
+                        use_container_width = st.checkbox(f"Use container width", value=True, key=f"use_container_width_{series_id}")
                         st.dataframe(df[['Date', 'Value', 'Change', 'Change (%)', 'Indicator', 'Series ID']], use_container_width=use_container_width)
 
 # Display the page

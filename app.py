@@ -16,7 +16,7 @@ st.set_page_config(
 from streamlit_option_menu import option_menu
 import yaml
 import bcrypt
-from pypages import show_inflation_consumerpriceindex, show_moneybankingcredit_h41, show_consumptionincome_autotrucksales, show_labormarket_unemploymentinsuranceclaims
+from pypages import show_inflation_consumerpriceindex, show_inflation_pcepriceindex, show_consumptionincome_autotrucksales, show_labormarket_unemploymentinsuranceclaims, show_labormarket_employmentsituation, show_labormarket_jobopeningslaborturnoversurvey, show_labormarket_employmentbyindustry
 
 import pandas as pd
 from datetime import datetime, timedelta
@@ -164,84 +164,78 @@ def main():
 
             menu_data = {
                 "87TR's Data App": [],
-                "Government Finance": [
-                    "Balance of Payments",
-                    "Credit Ratings",
-                    "Debt Issuance"
-                ],
+                #"Government Finance": [
+                    #"Balance of Payments",
+                    #"Credit Ratings",
+                    #"Debt Issuance"
+                #],
                 "Consumption & Income": [
                     "Auto & Truck Sales",
-                    "Personal Consumption Expenditures",
-                    "Personal Income",
-                    "Retail Inventories",
-                    "Retail Inventory Sales Ratio",
-                    "Retail Sales"
+                    #"Personal Consumption Expenditures",
+                    #"Personal Income",
+                    #"Retail Inventories",
+                    #"Retail Inventory Sales Ratio",
+                    #"Retail Sales"
                 ],
-                "Energy": [
-                    "Weekly Natural Gas Storage",
-                    "Weekly Petroleum Supply"
-                ],
-                "Flow of Funds": [
-                    "Balance Sheet Tables",
-                    "Debt & Borrowing Tables",
-                    "Flows Tables Summary",
-                    "Flows Tables by Instrument",
-                    "Flows Tables by Sector",
-                    "Level Tables Summary",
-                    "Level Tables by Instrument",
-                    "Level Tables by Sector",
-                    "Supplementary Tables"
-                ],
-                "Foreign Trade": [
-                    "Bilateral Trade",
-                    "International Trade"
-                ],
-                "Housing & Construction": [
-                    "Case-Shiller Home Price",
-                    "Construction Put in Place",
-                    "Housing Market",
-                    "Housing Vacancy Rates"
-                ],
-                "Industry": [
-                    "Capacity Utilization",
-                    "Industrial Capacity",
-                    "Industrial Production",
-                    "Rail Traffic",
-                    "Shipments, Inventories & Orders"
-                ],
+                #"Energy": [
+                    #"Weekly Natural Gas Storage",
+                    #"Weekly Petroleum Supply"
+                #],
+                #"Flow of Funds": [
+                    #"Balance Sheet Tables",
+                    #"Debt & Borrowing Tables",
+                    #"Flows Tables Summary",
+                    #"Flows Tables by Instrument",
+                    #"Flows Tables by Sector",
+                    #"Level Tables Summary",
+                    #"Level Tables by Instrument",
+                    #Level Tables by Sector",
+                    #"Supplementary Tables"
+                #],
+                #"Foreign Trade": [
+                    #"Bilateral Trade",
+                    #"International Trade"
+                #],
+                #"Housing & Construction": [
+                    #"Case-Shiller Home Price",
+                    #"Construction Put in Place",
+                    #"Housing Market",
+                    #"Housing Vacancy Rates"
+                #],
+                #"Industry": [
+                    #"Capacity Utilization",
+                    #"Industrial Capacity",
+                    #"Industrial Production",
+                    #"Rail Traffic",
+                    #"Shipments, Inventories & Orders"
+                #],
                 "Inflation": [
                     "Consumer Price Index",
-                    "Employment Cost Index",
-                    "Import & Export Prices",
                     "PCE Price Indices",
-                    "Producer Prices"
+                    #"Employment Cost Index",
+                    #"Import & Export Prices",
+                    #"Producer Prices"
                 ],
                 "Labor Market": [
                     "Employment Situation",
                     "Employment by Industry",
-                    "JOLTS",
-                    "Productivity & Costs",
+                    "Job Openings Labor Turnover Survey",
+                    #"Productivity & Costs",
                     "Unemployment Insurance Claims"
                 ],
-                "Leading Indicators & Surveys": [
-                    "Business Cycle Indicators",
-                    "Consumer Confidence",
-                    "Institute for Supply Management"
-                ],
-                "Money, Banking & Credit": [
-                    "G.19",
-                    "H.4.1",
-                    "H.8",
-                    "Money Supply"
-                ],
-                "National Accounts": [
-                    "Domestic Product & Income",
-                    "Foreign Transactions",
-                    "GDP",
-                    "Personal Income & Outlays",
-                    "Receipts & Expenditures",
-                    "Saving & Investment"
-                ]
+                #"Leading Indicators & Surveys": [
+                    #"Business Cycle Indicators",
+                    #"Consumer Confidence",
+                    #"Institute for Supply Management"
+                #],
+                #"National Accounts": [
+                    #"Domestic Product & Income",
+                    #"Foreign Transactions",
+                    #"GDP",
+                    #"Personal Income & Outlays",
+                    #"Receipts & Expenditures",
+                    #"Saving & Investment"
+                #]
             }
 
             menu = list(menu_data.keys())
@@ -273,21 +267,25 @@ def main():
                 public_ip = "Error: Unable to retrieve IP address"
 
             st.markdown("<h1><b>Data App Information:</b></h1>", unsafe_allow_html=True)
-            st.markdown(f"<h3><b>Software Name:</b> Economy.py</h>", unsafe_allow_html=True)
+            st.markdown(f"<h3><b>Software Name:</b> app.py</h>", unsafe_allow_html=True)
             st.markdown(f"<h3><b>Public IP:</b> {public_ip}</h3>", unsafe_allow_html=True)
 
         if choice == "87TR's Data App":
             show_overview()
         elif sub_choice == "Consumer Price Index":
             show_inflation_consumerpriceindex()
-        elif sub_choice == "H.4.1": 
-            show_moneybankingcredit_h41()
+        elif sub_choice == "PCE Price Indices":
+            show_inflation_pcepriceindex()
         elif sub_choice == "Auto & Truck Sales": 
             show_consumptionincome_autotrucksales()
         elif sub_choice == "Unemployment Insurance Claims": 
             show_labormarket_unemploymentinsuranceclaims()
-
-
+        elif sub_choice == "Employment Situation": 
+            show_labormarket_employmentsituation()
+        elif sub_choice == "Job Openings Labor Turnover Survey": 
+            show_labormarket_jobopeningslaborturnoversurvey()
+        elif sub_choice == "Employment by Industry": 
+            show_labormarket_employmentbyindustry()
     else:
         centered_col = st.columns([1, 1, 1])
         with centered_col[1]: 
@@ -297,7 +295,6 @@ def main():
             st.markdown("<h1 style='padding-top: 5px; padding-bottom: 5px;'><b>Welcome to 87TR's Data App</b></h1>", unsafe_allow_html=True)
             st.markdown("<h3 style='padding-top: 5px; padding-bottom: 5px;'>The application specializes in tracking and analyzing a wide range of economic indicators, providing users with valuable insights into the financial landscape. It offers tools to access and interpret data related to government finance, balance of payments, consumption and income, energy, flow of funds, foreign trade, fund statistics, housing and construction, industry, inflation, labor market, leading indicators, money, banking, credit, and national accounts. This comprehensive platform empowers users to make informed decisions based on real-time economic data.</h3>", unsafe_allow_html=True)
             st.markdown("""<div style="padding-top: 20px; padding-bottom: 20px;"><hr></div>""", unsafe_allow_html=True)
-            st.success("""Explore the open-source version of this app by visiting this [link](insert_link_here).""", icon="🌎",)
 
             show_login()
 

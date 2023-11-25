@@ -191,6 +191,7 @@ def show_consumptionincome_autotrucksales():
 
                         st.markdown(f'<h3><b>{indicator_name}</b> | Source: <a href="https://fred.stlouisfed.org/series/{series_id}">FRED</a></h3>', unsafe_allow_html=True)
 
+                        st.markdown("<h4><b>Years</4></h1>", unsafe_allow_html=True)
                         chart = alt.Chart(df).mark_line().encode(
                             x='Date:T',
                             y='Value:Q'
@@ -203,7 +204,7 @@ def show_consumptionincome_autotrucksales():
                         df = df.sort_values(by='Date', ascending=False)
                         df = df.reset_index(drop=True)
                         df = df.head(48)
-                        use_container_width = st.checkbox(f"Use container width ({indicator_name})", value=True, key=f"use_container_width_{series_id}")
+                        use_container_width = st.checkbox(f"Use container width", value=True, key=f"use_container_width_{series_id}")
                         st.dataframe(df[['Date', 'Value', 'Indicator', 'Series ID']], use_container_width=use_container_width)
 
         with tab2a:
@@ -237,6 +238,7 @@ def show_consumptionincome_autotrucksales():
 
                         st.markdown(f'<h3><b>{indicator_name}</b> | Source: <a href="https://fred.stlouisfed.org/series/{series_id}">FRED</a></h3>', unsafe_allow_html=True)
 
+                        st.markdown("<h4><b>Years</4></h1>", unsafe_allow_html=True)
                         chart = alt.Chart(df).mark_line().encode(
                             x='Date:T',
                             y='Value:Q'
@@ -250,7 +252,7 @@ def show_consumptionincome_autotrucksales():
                         df = df.sort_values(by='Date', ascending=False)
                         df = df.reset_index(drop=True)
                         df = df.head(48)
-                        use_container_width = st.checkbox(f"Use container width ({indicator_name})", value=True, key=f"use_container_width_{series_id}")
+                        use_container_width = st.checkbox(f"Use container width", value=True, key=f"use_container_width_{series_id}")
                         st.dataframe(df[['Date', 'Value', 'Indicator', 'Series ID']], use_container_width=use_container_width)
             
 # Display the page
